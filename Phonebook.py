@@ -2,12 +2,15 @@ import sqlite3 as sql
 
 from jinja2 import pass_eval_context
 
+# connects you to the phonebook db
 connection = sql.connect("phonebook.db")
 c = connection.cursor()
 
+# makes a new table if one does not already exists named phonebook
 c.execute("CREATE TABLE IF NOT EXISTS phonebook (firstname TEXT, lastname TEXT, phonenumber TEXT, streetaddress TEXT)")
 
 choice = None
+#menu options
 while choice != "5":
     print("1: Add person to phone book")
     print("2: Update records")
@@ -17,6 +20,7 @@ while choice != "5":
     choice = input("> ")
     print()
     
+    #add you user to your phone book
     if choice == "1":
         
         try:
@@ -32,6 +36,7 @@ while choice != "5":
         except ValueError:
             print("Invalid Info")
             
+    # make changes in your phone book
     if choice == "2":
         try:
             change_choice = None
@@ -78,12 +83,14 @@ while choice != "5":
                     
         except ValueError:
             print("Invalid Info")
-
+            
+    # removes a user from the phone book
     if choice == "3":
         phonenumber = input("what is the phone number you wish to remove: ")
         values = (phonenumber, )
         c.execute("DELETE FROM phonebook WHERE phonenumber = ?", values)
         
+    # display all the phonenumber in your book
     if choice == "4":
         c.execute("SELECT * FROM phonebook Order by lastname desc")
         print("{:>15} {:>15} {:>15} {:>15}".format("firstname", "lastname", "phonenumber", "streetaddress"))
